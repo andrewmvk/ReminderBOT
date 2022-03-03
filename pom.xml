@@ -48,6 +48,12 @@
               <goals>
                 <goal>copy-dependencies</goal>
               </goals>
+              <configuration>
+                <outputDirectory>target/dependency/</outputDirectory>
+                <overWriteReleases>false</overWriteReleases>
+                <overWriteSnapshots>false</overWriteSnapshots>
+                <overWriteIfNewer>true</overWriteIfNewer>
+              </configuration>
             </execution>
           </executions>
         </plugin>

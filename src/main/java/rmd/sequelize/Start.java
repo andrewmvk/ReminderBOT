@@ -16,7 +16,7 @@ public class Start {
     public static Connection connecting() throws SQLException, IOException, URISyntaxException {
 
         if(System.getenv("SPRING_DATASOURCE_USERNAME")!=null) {
-            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+            URI dbUri = new URI(System.getenv("URL"));
 
             String username = dbUri.getUserInfo().split(":")[0];
             System.out.println("Usuário: "+username);
@@ -25,9 +25,9 @@ public class Start {
             String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
             System.out.println("URL: "+dbUrl);
 
-            BasicDataSource basicDataSource = dataSource(dbUrl, username, password);
-            //Connection connection = DriverManager.getConnection(dbUrl, username, password);
-            return basicDataSource.getConnection();
+            /*BasicDataSource basicDataSource = dataSource(dbUrl, username, password);*/
+            Connection connection = DriverManager.getConnection(dbUrl, username, password);
+            return connection;
         } else {
             Properties prop = readPropertiesFile("application.properties");
             Connection connection = DriverManager.getConnection(prop.getProperty("db_url"), prop.getProperty("db_username"), prop.getProperty("db_password"));

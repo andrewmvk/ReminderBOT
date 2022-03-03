@@ -33,7 +33,6 @@ public class Reminding {
         Calendar hoje = Calendar.getInstance();
 
         try {
-            Properties prop = Start.readPropertiesFile("application.properties");
             Start.connecting().close();
             System.out.println("Connected to the PostgreSQL");
 

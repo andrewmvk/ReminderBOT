@@ -1,5 +1,7 @@
 package rmd.sequelize;
 
+import org.apache.commons.dbcp.BasicDataSource;
+
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -22,8 +24,10 @@ public class Start {
             System.out.println("Senha: "+password);
             String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
             System.out.println("URL: "+dbUrl);
-            Connection connection = DriverManager.getConnection(dbUrl, username, password);
-            return connection;
+
+            BasicDataSource basicDataSource = dataSource(dbUrl, username, password);
+            //Connection connection = DriverManager.getConnection(dbUrl, username, password);
+            return basicDataSource.getConnection();
         } else {
             Properties prop = readPropertiesFile("application.properties");
             Connection connection = DriverManager.getConnection(prop.getProperty("db_url"), prop.getProperty("db_username"), prop.getProperty("db_password"));
@@ -46,5 +50,13 @@ public class Start {
             fis.close();
         }
         return prop;
+    }
+    public static BasicDataSource dataSource(String dbUrl, String username, String password) {
+        BasicDataSource basicDataSource = new BasicDataSource();
+        basicDataSource.setUrl(dbUrl);
+        basicDataSource.setUsername(username);
+        basicDataSource.setPassword(password);
+
+        return basicDataSource;
     }
 }

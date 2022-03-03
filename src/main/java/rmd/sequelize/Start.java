@@ -13,9 +13,8 @@ public class Start {
 
         //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/discordbot", "postgres", "1234567");
         Properties prop = readPropertiesFile("application.properties");
-        Connection connection = DriverManager.getConnection("jdbc:"+prop.get("db.url"), prop.getProperty("db.username"), prop.getProperty("db.password"));
-
         System.out.println(prop);
+        Connection connection = DriverManager.getConnection("jdbc:"+prop.get("db.url"), prop.getProperty("db.username"), prop.getProperty("db.password"));
 
         return connection;
     }

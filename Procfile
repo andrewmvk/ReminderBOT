@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes:target/dependency/* rmd.reminding.Reminding ${DB_URL} ${USER} ${PASSWORD} ${TOKEN}
+web: java $JAVA_OPTS -cp target/classes:target/dependency/* rmd.reminding.Reminding

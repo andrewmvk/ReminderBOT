@@ -33,9 +33,10 @@ public class Reminding {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar hoje = Calendar.getInstance();
 
-        Dotenv dotenv = null;
-        dotenv = Dotenv.configure().load();
         try {
+            Dotenv dotenv = null;
+            dotenv = Dotenv.configure().load();
+            
             Properties prop = Start.readPropertiesFile("application.properties");
             Start.connecting().close();
             System.out.println("Connected to the PostgreSQL");

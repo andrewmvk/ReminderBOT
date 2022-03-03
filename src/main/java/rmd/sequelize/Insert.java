@@ -5,17 +5,15 @@ import rmd.reminding.Reminding;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 
 public class Insert {
     public static Long create(@Nonnull Long serverID,@Nonnull Long channelID,
                               @Nullable String title,@Nullable String description,@Nullable String date,
                               @Nonnull String author) throws SQLException, IOException {
-        PreparedStatement statement = Start.connecting().prepareStatement(Reminding.sql);
-        Statement statementSelect = Start.connecting().createStatement();
+        Connection connection = Start.connecting();
+        PreparedStatement statement = connection.prepareStatement(Reminding.sql);
+        Statement statementSelect = connection.createStatement();
 
         int rows = 0;
 
@@ -31,10 +29,13 @@ public class Insert {
             System.out.println("Evento criado!");
         }
 
+        System.out.println("Informações importantés");
         ResultSet result = statementSelect.executeQuery(Reminding.selectId);
         result.next();
         long messageID = result.getLong(1);
         result.close();
+
+        connection.close();
         return messageID;
     }
 }

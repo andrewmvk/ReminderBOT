@@ -4,6 +4,7 @@ import rmd.date.Time;
 import rmd.reminding.Reminding;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,10 +12,12 @@ import java.text.ParseException;
 
 public class Select {
     public static String[] select(Long messagesID, Long serverID) throws SQLException, IOException {
-        Statement statementSelect = Start.connecting().createStatement();
+        Connection connection = Start.connecting();
+        Statement statementSelect = connection.createStatement();
         ResultSet result = statementSelect.executeQuery(Reminding.selectMessage + messagesID + "AND server_id=" + serverID );
 
         if(!result.next()) {
+            connection.close();
             return null;
         } else {
             String[] message = new String[4];
@@ -22,17 +25,20 @@ public class Select {
             message[1] = result.getString("date");
             message[2] = result.getString("description");
             message[3] = result.getString("author");
+            connection.close();
             result.close();
             return message;
         }
     }
     public static String[][] selectMessages(Long serverID) throws SQLException, ParseException, IOException {
-        Statement statementSelect = Start.connecting().createStatement();
+        Connection connection = Start.connecting();
+        Statement statementSelect = connection.createStatement();
 
         ResultSet count = statementSelect.executeQuery("SELECT COUNT(*) FROM serversmessages WHERE server_id=" + serverID );
 
         count.next();
         if(count.getInt(1)==0) {
+            connection.close();
             return null;
         } else {
             int i = count.getInt(1);
@@ -70,12 +76,14 @@ public class Select {
                     }
                 }
             }
+            connection.close();
             result.close();
             return messages;
         }
     }
     public static String[][] selectALLMessages () throws SQLException, IOException {
-        Statement statementSelect = Start.connecting().createStatement();
+        Connection connection = Start.connecting();
+        Statement statementSelect = connection.createStatement();
         ResultSet count = statementSelect.executeQuery("SELECT COUNT(*) FROM serversmessages");
 
         count.next();
@@ -97,6 +105,7 @@ public class Select {
         }
 
         result.close();
+        connection.close();
         return allMessages;
     }
 }

@@ -16,11 +16,11 @@ public class Start {
             String dataBaseURL = System.getenv("SPRING_DATASOURCE_URL");
             System.out.println("USERNAME: "+System.getenv("JDBC_DATABASE_USERNAME"));
             System.out.println("USERNAME: "+System.getenv("JDBC_DATABASE_PASSWORD"));
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://ec2-54-147-93-73.compute-1.amazonaws.com:5432/d2f7u98g6oo9q7", System.getenv("JDBC_DATABASE_USERNAME"), System.getenv("JDBC_DATABASE_PASSWORD"));
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://ec2-54-147-93-73.compute-1.amazonaws.com:5432/d2f7u98g6oo9q7", "ibwopmmesblhiy", "e2ce7681f7d0bfcc6cb3f857449c8abec3adf1ca812b0121218e21ebe617abb3");
             return connection;
         } else {
             Properties prop = readPropertiesFile("application.properties");
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://ec2-54-147-93-73.compute-1.amazonaws.com:5432/d2f7u98g6oo9q7", "ibwopmmesblhiy", "e2ce7681f7d0bfcc6cb3f857449c8abec3adf1ca812b0121218e21ebe617abb3");
+            Connection connection = DriverManager.getConnection(prop.getProperty("db_url"), prop.getProperty("db_username"), prop.getProperty("db_password"));
             return connection;
         }
 

@@ -1,6 +1,5 @@
 package rmd.reminding;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import rmd.date.Time;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
@@ -32,17 +31,13 @@ public class Reminding {
     public static void main(String[] args) throws LoginException, SQLException, IOException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar hoje = Calendar.getInstance();
-        System.out.println(System.getenv());
 
         try {
-            Dotenv dotenv = null;
-            dotenv = Dotenv.configure().load();
-
             Properties prop = Start.readPropertiesFile("application.properties");
             Start.connecting().close();
             System.out.println("Connected to the PostgreSQL");
 
-            JDABuilder builder = JDABuilder.createDefault(dotenv.get("TOKEN"));
+            JDABuilder builder = JDABuilder.createDefault(System.getenv("TOKEN"));
             builder.setActivity(Activity.playing("!!rmd commands"));
             builder.addEventListeners(new Commands());
 

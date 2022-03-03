@@ -8,18 +8,19 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
-import io.github.cdimascio.dotenv.Dotenv;
 
 public class Start {
     public static Connection connecting() throws SQLException, IOException {
 
-        Dotenv dotenv = null;
-        dotenv = Dotenv.configure().load();
-        //Connection connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/discordbot", "postgres", "1234567");
         Properties prop = readPropertiesFile("application.properties");
-        Connection connection = DriverManager.getConnection("jdbc:postgresql://ec2-54-147-93-73.compute-1.amazonaws.com:5432/d2f7u98g6oo9q7", "ibwopmmesblhiy", "e2ce7681f7d0bfcc6cb3f857449c8abec3adf1ca812b0121218e21ebe617abb3");
+        if(System.getenv("SPRING_DATASOURCE_USERNAME")!=null) {
+            Connection connection = DriverManager.getConnection("jdbc:postgresql://ec2-54-147-93-73.compute-1.amazonaws.com:5432/d2f7u98g6oo9q7", System.getenv("SPRING_DATASOURCE_USERNAME"), System.getenv("JDBC_DATABASE_PASSWORD"));
+            return connection;
+        } else {
+            Connection connection = DriverManager.getConnection(prop.getProperty("db_url"), prop.getProperty("db_username"), prop.getProperty("db_password"));
+            return connection;
+        }
 
-        return connection;
     }
     public static Properties readPropertiesFile(String fileName) throws IOException {
         FileInputStream fis = null;

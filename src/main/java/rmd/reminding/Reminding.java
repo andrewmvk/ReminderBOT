@@ -32,11 +32,12 @@ public class Reminding {
     public static void main(String[] args) throws LoginException, SQLException, IOException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar hoje = Calendar.getInstance();
+        System.out.println(System.getenv());
 
         try {
             Dotenv dotenv = null;
             dotenv = Dotenv.configure().load();
-            
+
             Properties prop = Start.readPropertiesFile("application.properties");
             Start.connecting().close();
             System.out.println("Connected to the PostgreSQL");

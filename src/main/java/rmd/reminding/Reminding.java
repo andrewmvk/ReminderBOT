@@ -17,6 +17,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
+import static rmd.sequelize.Start.readPropertiesFile;
+
 public class Reminding {
 
     public static String prefix = "!!";
@@ -36,7 +38,14 @@ public class Reminding {
             Start.connecting().close();
             System.out.println("Connected to the PostgreSQL");
 
-            JDABuilder builder = JDABuilder.createDefault(System.getenv("TOKEN"));
+            String token = null;
+            if(System.getenv("TOKEN")!=null) {
+                token = System.getenv("TOKEN");
+            } else {
+                Properties prop = readPropertiesFile("application.properties");
+                token = prop.getProperty("token");
+            }
+            JDABuilder builder = JDABuilder.createDefault(token);
             builder.setActivity(Activity.playing("!!rmd commands"));
             builder.addEventListeners(new Commands());
 

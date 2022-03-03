@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes;target/dependency rmd.reminding.Reminding
+web: java $JAVA_OPTS -cp target/dependency/*;target/classes rmd.reminding.Reminding

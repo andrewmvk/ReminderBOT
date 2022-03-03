@@ -13,7 +13,11 @@ public class Start {
     public static Connection connecting() throws SQLException, IOException {
 
         if(System.getenv("SPRING_DATASOURCE_USERNAME")!=null) {
-            Connection connection = DriverManager.getConnection("jdbc:postgresql://ec2-54-147-93-73.compute-1.amazonaws.com:5432/d2f7u98g6oo9q7", System.getenv("SPRING_DATASOURCE_USERNAME"), System.getenv("JDBC_DATABASE_PASSWORD"));
+            String dataBaseURL = System.getenv("SPRING_DATASOURCE_URL");
+            System.out.println(System.getenv());
+            String[] splitterUrl = dataBaseURL.split("/?");
+            System.out.println("URL DA BASE DE DADOS: "+splitterUrl[0]);
+            Connection connection = DriverManager.getConnection(splitterUrl[0], System.getenv("SPRING_DATASOURCE_USERNAME"), System.getenv("JDBC_DATABASE_PASSWORD"));
             return connection;
         } else {
             Properties prop = readPropertiesFile("application.properties");

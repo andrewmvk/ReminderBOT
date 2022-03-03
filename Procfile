@@ -1,1 +1,1 @@
-web: java $JAVA_OPTS -cp target/classes;target/dependency/*.jar rmd.reminding.Reminding
+web: java -jar target/discord-bot-1.0-SNAPSHOT.jar

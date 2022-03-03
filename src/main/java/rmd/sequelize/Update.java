@@ -1,12 +1,13 @@
 package rmd.sequelize;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class Update {
-    public static void updateTitle (Long messageId, String title, Long serverID, Long channelID) throws SQLException, IOException {
+    public static void updateTitle (Long messageId, String title, Long serverID, Long channelID) throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE serversmessages SET title='"+ title
@@ -18,7 +19,7 @@ public class Update {
         connection.close();
         statement.close();
     }
-    public static void updateDate(Long messageId, String date, Long serverID, Long channelID) throws SQLException, IOException {
+    public static void updateDate(Long messageId, String date, Long serverID, Long channelID) throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE serversmessages SET date='"+ date
@@ -30,7 +31,7 @@ public class Update {
         connection.close();
         statement.close();
     }
-    public static void updateDescription(Long messageId, String description, Long serverID, Long channelID) throws SQLException, IOException {
+    public static void updateDescription(Long messageId, String description, Long serverID, Long channelID) throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         PreparedStatement statement = Start.connecting().prepareStatement(
                 "UPDATE serversmessages SET description='"+ description
@@ -42,7 +43,7 @@ public class Update {
         connection.close();
         statement.close();
     }
-    public static void updateRole (String role ,Long serverID) throws SQLException, IOException {
+    public static void updateRole (String role ,Long serverID) throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         PreparedStatement statement = connection.prepareStatement(
                 "UPDATE serversmessages SET role='" + role + "'"

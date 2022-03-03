@@ -3,21 +3,26 @@ package rmd.sequelize;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Properties;
 
 public class Start {
-    public static Connection connecting() throws SQLException, IOException {
+    public static Connection connecting() throws SQLException, IOException, URISyntaxException {
 
         if(System.getenv("SPRING_DATASOURCE_USERNAME")!=null) {
-            String dataBaseURL = System.getenv("SPRING_DATASOURCE_URL");
-            System.out.println("USERNAME: "+System.getenv("JDBC_DATABASE_USERNAME"));
-            System.out.println("USERNAME: "+System.getenv("JDBC_DATABASE_PASSWORD"));
-            String dbUrl = System.getenv("JDBC_DATABASE_URL");
-            Connection connection = DriverManager.getConnection(dbUrl);
+            URI dbUri = new URI(System.getenv("DATABASE_URL"));
+
+            String username = dbUri.getUserInfo().split(":")[0];
+            System.out.println("Usuário: "+username);
+            String password = dbUri.getUserInfo().split(":")[1];
+            System.out.println("Senha: "+password);
+            String dbUrl = "jdbc:postgresql://" + dbUri.getHost() + dbUri.getPath();
+            System.out.println("URL: "+dbUrl);
+            Connection connection = DriverManager.getConnection(dbUrl, username, password);
             return connection;
         } else {
             Properties prop = readPropertiesFile("application.properties");

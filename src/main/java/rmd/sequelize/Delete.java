@@ -3,13 +3,14 @@ package rmd.sequelize;
 import rmd.reminding.Reminding;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
 public class Delete {
-    public static String[] delete(Long messageID, Long serverID, Long channelID) throws SQLException, IOException {
+    public static String[] delete(Long messageID, Long serverID, Long channelID) throws SQLException, IOException, URISyntaxException {
 
         Connection connection = Start.connecting();
         Statement statementSelect = connection.createStatement();

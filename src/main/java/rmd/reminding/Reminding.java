@@ -12,6 +12,7 @@ import rmd.sequelize.Start;
 import javax.security.auth.login.LoginException;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -50,7 +51,7 @@ public class Reminding {
             builder.addEventListeners(new Commands());
 
             builder.build();
-        } catch (SQLException | IOException e) {
+        } catch (SQLException | IOException | URISyntaxException e) {
             System.out.println("Error in connecting to PostgreSQL server");
             e.printStackTrace();
             return;
@@ -103,7 +104,7 @@ public class Reminding {
                             System.out.println("Incorrect date format, number: " + i);
                         }
                     }
-                } catch (ParseException | SQLException | IOException e) {
+                } catch (ParseException | SQLException | IOException | URISyntaxException e) {
                     e.printStackTrace();
                 }
             }

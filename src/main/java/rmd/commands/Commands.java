@@ -13,6 +13,7 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import rmd.errors.Exceptions;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.*;
 import java.text.ParseException;
 import java.util.Arrays;
@@ -56,7 +57,7 @@ public class Commands extends ListenerAdapter {
                 } else {
                     messageID = Insert.create(serverID, channelID, title.toString(),null,null, author);
                 }
-            } catch (SQLException | IOException e) {
+            } catch (SQLException | IOException | URISyntaxException e) {
                 event.getChannel().sendMessageEmbeds(Exceptions.sqlConnection().build()).queue();
                 Exceptions.sqlConnection().clear();
                 e.printStackTrace();
@@ -118,7 +119,7 @@ public class Commands extends ListenerAdapter {
                 }
                 event.getChannel().sendMessageEmbeds(info.build()).queue();
                 info.clear();
-            } catch (SQLException | NumberFormatException | ParseException | ArrayIndexOutOfBoundsException | IOException e) {
+            } catch (SQLException | NumberFormatException | ParseException | ArrayIndexOutOfBoundsException | IOException | URISyntaxException e) {
                 String erro = Arrays.toString(e.getStackTrace());
                 if(erro.contains("SQLException")) {
                     event.getChannel().sendMessageEmbeds(Exceptions.sqlConnection().build()).queue();
@@ -218,7 +219,7 @@ public class Commands extends ListenerAdapter {
                     event.getChannel().sendMessageEmbeds(Exceptions.parseDate().build()).queue();
                     Exceptions.parseDate().clear();
                 }
-            } catch (SQLException | ParseException | ArrayIndexOutOfBoundsException | NumberFormatException | IOException e) {
+            } catch (SQLException | ParseException | ArrayIndexOutOfBoundsException | NumberFormatException | IOException | URISyntaxException e) {
                 e.printStackTrace();
                 String error = Arrays.toString(e.getStackTrace());
                 if(error.contains("sql")) {
@@ -280,7 +281,7 @@ public class Commands extends ListenerAdapter {
                 }
                 event.getChannel().sendMessageEmbeds(info.build()).queue();
                 info.clear();
-            } catch (SQLException | ParseException | NumberFormatException | IOException e) {
+            } catch (SQLException | ParseException | NumberFormatException | IOException | URISyntaxException e) {
                 String erro = Arrays.toString(e.getStackTrace());
                 if(erro.contains("NumberFormatException")){
                     event.getChannel().sendMessageEmbeds(Exceptions.parseID().build()).queue();
@@ -321,6 +322,8 @@ public class Commands extends ListenerAdapter {
                         info.addField("ERROR:", "Não existe nenhum evento cadastrado nesse servidor!", false);
                         info.setColor(0xff0000);
                     } catch (IOException e) {
+                        e.printStackTrace();
+                    } catch (URISyntaxException e) {
                         e.printStackTrace();
                     }
                     if (!argumento.contains("NullPointerException")) {
@@ -407,7 +410,7 @@ public class Commands extends ListenerAdapter {
                 }
                 event.getChannel().sendMessageEmbeds(info.build()).queue();
                 info.clear();
-            } catch (SQLException | NumberFormatException | ParseException | IOException e) {
+            } catch (SQLException | NumberFormatException | ParseException | IOException | URISyntaxException e) {
                 String error = Arrays.toString(e.getStackTrace());
                 if(error.contains("SQLException")) {
                     event.getChannel().sendMessageEmbeds(Exceptions.sqlConnection().build()).queue();
@@ -470,7 +473,7 @@ public class Commands extends ListenerAdapter {
                     }
                     event.getChannel().sendMessageEmbeds(info.build()).queue();
                     info.clear();
-                } catch (SQLException | NumberFormatException | IOException e) {
+                } catch (SQLException | NumberFormatException | IOException | URISyntaxException e) {
                     String error = Arrays.toString(e.getStackTrace());
                     if (error.contains("SQLException")) {
                         e.printStackTrace();
@@ -531,7 +534,7 @@ public class Commands extends ListenerAdapter {
                     }
                     Update.updateRole(result, serverID);
                     info.setColor(0x2d3b7a);
-                } catch (SQLException | IOException e) {
+                } catch (SQLException | IOException | URISyntaxException e) {
                     e.printStackTrace();
                 }
             } else {

@@ -4,6 +4,7 @@ import rmd.date.Time;
 import rmd.reminding.Reminding;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +12,7 @@ import java.sql.Statement;
 import java.text.ParseException;
 
 public class Select {
-    public static String[] select(Long messagesID, Long serverID) throws SQLException, IOException {
+    public static String[] select(Long messagesID, Long serverID) throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         Statement statementSelect = connection.createStatement();
         ResultSet result = statementSelect.executeQuery(Reminding.selectMessage + messagesID + "AND server_id=" + serverID );
@@ -30,7 +31,7 @@ public class Select {
             return message;
         }
     }
-    public static String[][] selectMessages(Long serverID) throws SQLException, ParseException, IOException {
+    public static String[][] selectMessages(Long serverID) throws SQLException, ParseException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         Statement statementSelect = connection.createStatement();
 
@@ -81,7 +82,7 @@ public class Select {
             return messages;
         }
     }
-    public static String[][] selectALLMessages () throws SQLException, IOException {
+    public static String[][] selectALLMessages () throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         Statement statementSelect = connection.createStatement();
         ResultSet count = statementSelect.executeQuery("SELECT COUNT(*) FROM serversmessages");

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import rmd.commands.Commands;
 import rmd.date.Today;
+import rmd.events.GuildMessageReactionAdd;
 import rmd.sequelize.Delete;
 import rmd.sequelize.Select;
 import rmd.sequelize.Start;
@@ -49,6 +50,7 @@ public class Reminding {
             JDABuilder builder = JDABuilder.createDefault(token);
             builder.setActivity(Activity.playing("!!rmd commands"));
             builder.addEventListeners(new Commands());
+            builder.addEventListeners(new GuildMessageReactionAdd());
 
             builder.build();
         } catch (SQLException | IOException | URISyntaxException e) {

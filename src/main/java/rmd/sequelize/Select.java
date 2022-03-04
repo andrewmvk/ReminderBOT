@@ -44,36 +44,42 @@ public class Select {
         } else {
             int i = count.getInt(1);
             count.close();
-            ResultSet result = statementSelect.executeQuery(Reminding.selectMessages + serverID );
+            ResultSet result = statementSelect.executeQuery(Reminding.selectMessages + serverID);
             int j = 0;
             String[][] messages = new String[i][4];
             String temp;
-            long m=804000;
+            long m = 804000;
             long[] daysLeft = new long[i];
+            long[] remaining = new long[2];
+            long[] timeRemaining = new long[i];
             while (result.next()) {
                 messages[j][0] = result.getString("title");
                 messages[j][1] = result.getString("date");
                 messages[j][2] = String.valueOf(result.getLong("messages_id"));
                 messages[j][3] = result.getString("role");
                 if (messages[j][1] != null) {
-                    daysLeft[j] = Time.daysLeft(messages[j][1]);
+                    remaining = Time.daysLeft(messages[j][1]);
+                    timeRemaining[j] = remaining[1];
+                    daysLeft[j] = remaining[0];
                 } else {
                     daysLeft[j] = m;
                     m--;
                 }
                 j++;
             }
-            for (int q=0; q<daysLeft.length; q++) {
-                for(int w=q+1; w<daysLeft.length; w++) {
-                    if(daysLeft[q]>daysLeft[w]) {
-                        for(int l=0; l<4; l++) {
+
+            int daysLeftLength = daysLeft.length;
+            for (int q = 0; q < daysLeftLength; q++) {
+                for (int w = q + 1; w < daysLeftLength; w++) {
+                    if (timeRemaining[q] > timeRemaining[w]) {
+                        for (int l = 0; l < 4; l++) {
                             temp = messages[q][l];
                             messages[q][l] = messages[w][l];
                             messages[w][l] = temp;
                         }
-                        temp = daysLeft[q] + "";
-                        daysLeft[q] = daysLeft[w];
-                        daysLeft[w] = Long.parseLong(temp);
+                        temp = timeRemaining[q] + "";
+                        timeRemaining[q] = timeRemaining[w];
+                        timeRemaining[w] = Long.parseLong(temp);
                     }
                 }
             }
@@ -108,5 +114,21 @@ public class Select {
         result.close();
         connection.close();
         return allMessages;
+    }
+    public static String selectRole (Long serverID) throws SQLException, IOException, URISyntaxException {
+        Connection connection = Start.connecting();
+        Statement statementSelect = connection.createStatement();
+        ResultSet result = statementSelect.executeQuery("SELECT role FROM serversmessages WHERE server_id=" + serverID );
+
+        result.next();
+        String role = null;
+        while(result.next()) {
+            if(result.getString("role")!=null) {
+                role = result.getString("role");
+                break;
+            }
+        }
+
+        return role;
     }
 }

@@ -37,7 +37,7 @@ public class Time {
 
         return finalTemp;
     }
-    public static Long daysLeft (String date) throws ParseException {
+    public static long[] daysLeft (String date) throws ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Date today = dateFormat.parse(Today.date());
         Date eventDate = dateFormat.parse(date);
@@ -45,6 +45,10 @@ public class Time {
         long diffEmMilli = Math.abs(today.getTime()-eventDate.getTime());
 
         Long days = TimeUnit.DAYS.convert(diffEmMilli, TimeUnit.MILLISECONDS);
-        return days;
+
+        long[] remaining = new long[2];
+        remaining[0] = days;
+        remaining[1] = diffEmMilli;
+        return remaining;
     }
 }

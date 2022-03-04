@@ -302,8 +302,12 @@ public class Commands extends ListenerAdapter {
 
             String argumento=null;
 
+            boolean noError = false;
+            String role = null;
+            int messagesLength = 0;
+
             Long serverID = Long.parseLong(event.getGuild().getId());
-            Long channelID = Long.parseLong(event.getChannel().getId());
+            //Long channelID = Long.parseLong(event.getChannel().getId());
             //Pode ser usado posteriormente para filtrar melhor as mensagens
 
             try {
@@ -316,50 +320,42 @@ public class Commands extends ListenerAdapter {
                     String[][] messages = null;
                     try {
                         messages = Select.selectMessages(serverID);
-                        int tamanho = messages.length;
+                        messagesLength = messages.length;
                     } catch (NullPointerException e) {
                         argumento = "NullPointerException";
                         info.addField("ERROR:", "Não existe nenhum evento cadastrado nesse servidor!", false);
                         info.setColor(0xff0000);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    } catch (URISyntaxException e) {
+                    } catch (IOException | URISyntaxException e) {
                         e.printStackTrace();
                     }
                     if (!argumento.contains("NullPointerException")) {
-                        for (int i = 0; i < messages.length; i++) {
-                            long days = 100L;
+                        for(int i=0; i < messagesLength; i++) {
+                            if(!messages[i][3].contains("everyone")) {
+                                role = "<@&" + messages[i][3] + ">";
+                                break;
+                            }
+                        }
+
+                        for (int i = 0; i < messagesLength; i++) {
                             int numero = i + 1;
                             info.setTitle("📚 RemindingBot: Evento por vir ⏰\n"
                                     + "-------------------------------------------");
                             if (messages[i][1]!=null) {
-                                days = rmd.date.Time.daysLeft(messages[i][1]);
                                 messages[i][1] = rmd.date.Time.timeLeft(messages[i][1]);
                             }
+
                             for (int j=0; j<2; j++) {
                                 if(messages[i][j]==null) {
                                     messages[i][j]="Não informado!";
                                 }
                             }
-                            if (days==30 || days==10 || days==7 || days<=3) {
-                                if (messages[i][3]!=null && !messages[i][3].contains("everyone")) {
-                                    info.addField("Evento " + numero + ": " + messages[i][0],
-                                            "Tempo restante :\n" + messages[i][1] +
-                                                    "\nID: " + messages[i][2] + "\n" +
-                                                    "<@&" + messages[i][3] + ">", false);
-                                } else if (messages[i][3]==null || messages[i][3].contains("everyone")){
-                                    info.addField("Evento " + numero + ": " + messages[i][0],
-                                            "Tempo restante :\n" + messages[i][1] +
-                                                    "\nID: " + messages[i][2] + "\n" +
-                                                    "@everyone", false);
-                                }
-                            } else {
-                                info.addField("Evento " + numero + ": " + messages[i][0],
+                            info.addField("Evento " + numero + ": " + messages[i][0],
                                         "Tempo restante :\n" + messages[i][1] +
                                                 "\nID: " + messages[i][2], false);
-                            }
                         }
+
                         info.setFooter("Criado por : Andrew Medeiros & Brayan Amaral");
+                        noError = true;
                     }
                 } else {
                     String[] message = Select.select(Long.parseLong(args[2]) ,serverID);
@@ -409,6 +405,9 @@ public class Commands extends ListenerAdapter {
                     }
                 }
                 event.getChannel().sendMessageEmbeds(info.build()).queue();
+                if(noError && role!=null) {
+                    event.getChannel().sendMessage(role).queue();
+                }
                 info.clear();
             } catch (SQLException | NumberFormatException | ParseException | IOException | URISyntaxException e) {
                 String error = Arrays.toString(e.getStackTrace());
@@ -553,35 +552,16 @@ public class Commands extends ListenerAdapter {
             }
             event.getChannel().sendMessageEmbeds(info.build()).queue();
 
-        } else if (args[0].equalsIgnoreCase(Reminding.prefix + "rmd")
-                && args.length>=2
-                && args[1].equalsIgnoreCase("commands")) {
+            if(result!=null) {
+                event.getChannel().sendMessage("Reaja com 🔔 para habilitar as notificações ou com 🔕 para desativá-las").queue();
+            }
 
-            EmbedBuilder info = new EmbedBuilder();
-            info.setTitle("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀📚 RemindingBot: Comandos ⏰\n" +
-                    "--------------------------------------------------------------------------------------");
-            info.addField("Criar evento :", "Cria um novo evento com nome alocado [name] (opcional) ou nome pré alocado ({Nome do evento}).\n" +
-                    "!!rmd create [name].", false);
-            info.addField("Modificar nome :", "Modifica o nome do evento com o ID representando-o, sendo [name] o seu novo nome.\n" +
-                    "!!rmd modify name [ID] [name]", false);
-            info.addField("Modificar data :", "Modifica a data do evento cujo ID é igual ao demonstrado seguindo a formatação de data descrita abaixo.\n" +
-                    "!!rmd modify date [ID] [dd/MM/yyyy HH:mm:ss]", false);
-            info.addField("Modificar descrição :", "Modifica a descrição do evento com identificador igual ao [ID]. Sem restrições aqui.\n" +
-                    "!!rmd modify description [ID] [Nova descrição]", false);
-            info.addField("Listar eventos :", "Lista os últimos 25 eventos criados no servidor em ordem de ocorrência.\n" +
-                    "!!rmd upcoming", false);
-            info.addField("Mostrar dados : ", "Lista apenas um evento em que ID descrito é o que o representa (descrição ampliada).\n" +
-                    "!!rmd upcoming [ID]", false);
-            info.addField("Remover evento : ", "Remove um evento de escolha a partir do ID. Não há confirmação para deletar!\n" +
-                    "!!rmd delete [ID]", false);
-            info.addField("Definir cargo :", "Define um cargo ao qual a notificação de evento próximo será dada quando listar eventos.\n" +
-                    "!!rmd define [Role]", false);
-            info.setColor(0x2d3b7a);
-            info.setFooter("Criado por: Andrew Medeiros & Brayan Amaral");
-
-            event.getChannel().sendMessageEmbeds(info.build()).queue();
-            info.clear();
-
+        } else if (event.getMember().getUser().equals(event.getJDA().getSelfUser())) {
+            String message = event.getMessage().getEmbeds().toString();
+            if (!message.contains("MessageEmbed")) {
+                event.getMessage().addReaction("🔔").queue();
+                event.getMessage().addReaction("🔕").queue();
+            }
         } else if (args[0].equalsIgnoreCase(Reminding.prefix + "rmd")) {
             EmbedBuilder info = new EmbedBuilder();
             info.addField("Esse comando não existe!","Use [ !!rmd commands ] para ver todas funções disponíveis!", false);

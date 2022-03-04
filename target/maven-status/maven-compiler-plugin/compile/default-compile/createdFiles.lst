@@ -1,0 +1,12 @@
+rmd\sequelize\Select.class
+rmd\sequelize\Delete.class
+rmd\date\Today.class
+rmd\sequelize\Update.class
+rmd\reminding\Reminding.class
+rmd\sequelize\Insert.class
+rmd\sequelize\Start.class
+rmd\reminding\Reminding$1.class
+rmd\date\Format.class
+rmd\commands\Commands.class
+rmd\date\Time.class
+rmd\errors\Exceptions.class

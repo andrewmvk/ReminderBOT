@@ -30,7 +30,6 @@ public class Insert {
             System.out.println("Evento criado!");
         }
 
-        System.out.println("Informações importantés");
         ResultSet result = statementSelect.executeQuery(Reminding.selectId);
         result.next();
         long messageID = result.getLong(1);

@@ -31,6 +31,8 @@ public class GuildMessageReactionAdd extends ListenerAdapter {
             } catch (SQLException | URISyntaxException | IOException e) {
                 e.printStackTrace();
             }
+        } else if(event.getReactionEmote().getName().equals("📆") && !event.getMember().getUser().equals(event.getJDA().getSelfUser())) {
+            event.getChannel().sendMessage("!!rmd upcoming").queue();
         }
     }
 }

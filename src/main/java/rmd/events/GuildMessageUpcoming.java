@@ -1,17 +1,21 @@
 package rmd.events;
 
 import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import rmd.date.Time;
 import rmd.errors.Exceptions;
 import rmd.reminding.Reminding;
 import rmd.sequelize.Select;
+import rmd.sequelize.Start;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
 import java.text.ParseException;
+import java.util.List;
+import java.util.Properties;
 
 public class GuildMessageUpcoming extends ListenerAdapter {
     public void onGuildMessageReceived(GuildMessageReceivedEvent event) {
@@ -23,13 +27,33 @@ public class GuildMessageUpcoming extends ListenerAdapter {
 
             String argumento;
 
+            boolean isBot = false;
             boolean noError = false;
             String role = null;
             int messagesLength = 0;
+            String messageFinalID = null;
 
             Long serverID = Long.parseLong(event.getGuild().getId());
             //Long channelID = Long.parseLong(event.getChannel().getId());
             //Future implementation for a best message filter
+
+            if (event.getMember().getUser().equals(event.getJDA().getSelfUser())) {
+                String lastMessageID = event.getChannel().getLatestMessageId();
+                List<Message> messageList = event.getChannel().getHistoryBefore(lastMessageID,1).complete().getRetrievedHistory();
+                Message message = messageList.get(0);
+                String messageID = message.getId();
+                String author = message.getAuthor().getName();
+                String messageType = message.getEmbeds().toString();
+                String botName = event.getJDA().getSelfUser().getName();
+
+                if(author.equals(botName) && messageType.contains("MessageEmbed")) {
+                    //Verification to see if this is a embed message and if this is a message written by the bot (botName)
+                    messageFinalID = messageID;
+                }
+
+                event.getMessage().delete().queue();
+                isBot = true;
+            }
 
             try {
                 try {
@@ -51,11 +75,16 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                         e.printStackTrace();
                     }
                     if (!argumento.contains("NullPointerException")) {
-                        for(int i=0; i < messagesLength; i++) {
-                            if(!messages[i][3].contains("everyone")) {
-                                role = "<@&" + messages[i][3] + ">";
-                                break;
+                        try {
+                            for (int i = 0; i < messagesLength; i++) {
+                                if (!messages[i][3].contains("everyone")) {
+                                    role = "<@&" + messages[i][3] + ">";
+                                    break;
+                                }
                             }
+                        } catch (NullPointerException e) {
+                            //Role not defined for a new created event
+                            role = "";
                         }
 
                         for (int i = 0; i < messagesLength; i++) {
@@ -123,9 +152,16 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                         }
                     }
                 }
-                event.getChannel().sendMessageEmbeds(info.build()).queue();
-                if(noError && role!=null) {
-                    event.getChannel().sendMessage(role).queue();
+                if(noError && role!=null && !role.equals("")) {
+                    if(!isBot) {
+                        event.getChannel().sendMessage(role + ", Clique em 📆 para atualizar.").queue();
+                    }
+                }
+                if (messageFinalID!=null) {
+                    //The message is edited if the messageFinalID isn't NULL
+                    event.getChannel().editMessageEmbedsById(messageFinalID, info.build()).queue();
+                } else {
+                    event.getChannel().sendMessageEmbeds(info.build()).queue();
                 }
                 info.clear();
             } catch (SQLException | NumberFormatException | ParseException | IOException | URISyntaxException | NullPointerException | ArrayIndexOutOfBoundsException e) {

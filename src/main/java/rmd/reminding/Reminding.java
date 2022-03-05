@@ -3,15 +3,13 @@ package rmd.reminding;
 import rmd.date.Time;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
-import rmd.commands.Commands;
 import rmd.date.Today;
-import rmd.events.GuildMessageReactionAdd;
+import rmd.events.*;
 import rmd.sequelize.Delete;
 import rmd.sequelize.Select;
 import rmd.sequelize.Start;
 
 import javax.security.auth.login.LoginException;
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.sql.SQLException;
@@ -49,8 +47,16 @@ public class Reminding {
             }
             JDABuilder builder = JDABuilder.createDefault(token);
             builder.setActivity(Activity.playing("!!rmd commands"));
-            builder.addEventListeners(new Commands());
             builder.addEventListeners(new GuildMessageReactionAdd());
+            builder.addEventListeners(new GuildMessageCommandsRequest());
+            builder.addEventListeners(new GuildMessageCreateRequest());
+            builder.addEventListeners(new GuildMessageModifyNameRequest());
+            builder.addEventListeners(new GuildMessageModifyDateRequest());
+            builder.addEventListeners(new GuildMessageModifyDescriptionRequest());
+            builder.addEventListeners(new GuildMessageUpcoming());
+            builder.addEventListeners(new GuildMessageDeleteRequest());
+            builder.addEventListeners(new GuildMessageDefineRoleRequest());
+            builder.addEventListeners(new GuildMessageOutOfCommands());
 
             builder.build();
         } catch (SQLException | IOException | URISyntaxException e) {

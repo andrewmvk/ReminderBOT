@@ -51,4 +51,11 @@ public class Time {
         remaining[1] = diffEmMilli;
         return remaining;
     }
+    public static long timeUntilSixAm() throws ParseException {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date tomorrow = dateFormat.parse(Today.dateSixAm());
+        Date today = dateFormat.parse(Today.date());
+
+        return Math.abs(tomorrow.getTime() - today.getTime());
+    }
 }

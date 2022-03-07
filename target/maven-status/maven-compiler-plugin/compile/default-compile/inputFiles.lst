@@ -1,6 +1,8 @@
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\date\Format.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageModifyDescriptionRequest.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageUpcoming.java
+C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageBotSend.java
+C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\embed\EmbedMessage.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageCreateRequest.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageReactionAdd.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\sequelize\Update.java

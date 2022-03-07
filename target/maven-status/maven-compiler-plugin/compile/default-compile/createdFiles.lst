@@ -13,7 +13,9 @@ rmd\errors\Exceptions.class
 rmd\sequelize\Select.class
 rmd\events\GuildMessageDefineRoleRequest.class
 rmd\sequelize\Delete.class
+rmd\embed\EmbedMessage.class
 rmd\sequelize\Update.class
+rmd\events\GuildMessageBotSend.class
 rmd\events\GuildMessageCommandsRequest.class
 rmd\events\GuildMessageModifyNameRequest.class
 rmd\sequelize\Start.class

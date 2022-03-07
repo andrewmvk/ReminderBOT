@@ -46,7 +46,7 @@ public class Select {
             count.close();
             ResultSet result = statementSelect.executeQuery(Reminding.selectMessages + serverID);
             int j = 0;
-            String[][] messages = new String[i][4];
+            String[][] messages = new String[i][5];
             String temp;
             long m = 804000;
             long[] daysLeft = new long[i];
@@ -57,6 +57,7 @@ public class Select {
                 messages[j][1] = result.getString("date");
                 messages[j][2] = String.valueOf(result.getLong("messages_id"));
                 messages[j][3] = result.getString("role");
+                messages[j][4] = String.valueOf(result.getLong("channel_id"));
                 if (messages[j][1] != null) {
                     remaining = Time.daysLeft(messages[j][1]);
                     timeRemaining[j] = remaining[1];

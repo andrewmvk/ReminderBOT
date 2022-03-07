@@ -1,9 +1,14 @@
 package rmd.reminding;
 
+import net.dv8tion.jda.api.EmbedBuilder;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.Guild;
+import net.dv8tion.jda.api.entities.TextChannel;
 import rmd.date.Time;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import rmd.date.Today;
+import rmd.embed.EmbedMessage;
 import rmd.events.*;
 import rmd.sequelize.Delete;
 import rmd.sequelize.Select;
@@ -24,13 +29,14 @@ public class Reminding {
     public static String prefix = "!!";
     public static String delete = "DELETE FROM serversmessages WHERE messages_id=";
     public static String selectMessage = "SELECT * FROM serversmessages WHERE messages_id=";
-    public static String selectMessages = "SELECT messages_id,title,date,role FROM serversmessages WHERE server_id=";
+    public static String selectMessages = "SELECT messages_id,title,date,role,channel_id FROM serversmessages WHERE server_id=";
     public static String select = "SELECT * FROM serversmessages";
     public static String selectId = "SELECT MAX(messages_id) FROM serversmessages";
     public static String sql = "INSERT INTO serversmessages (server_id, channel_id, title, description, date, author) VALUES (?, ?, ?, ?, ?, ?)";
     public static Date dataDuasSemanas, dataUmaSemana, dataUmDia;
+    public static JDA jda;
 
-    public static void main(String[] args) throws LoginException, SQLException, IOException {
+    public static void main(String[] args) throws LoginException, ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar hoje = Calendar.getInstance();
 
@@ -57,10 +63,13 @@ public class Reminding {
             builder.addEventListeners(new GuildMessageDeleteRequest());
             builder.addEventListeners(new GuildMessageDefineRoleRequest());
             builder.addEventListeners(new GuildMessageOutOfCommands());
+            builder.addEventListeners(new GuildMessageBotSend());
 
-            builder.build();
-        } catch (SQLException | IOException | URISyntaxException e) {
-            System.out.println("Error in connecting to PostgreSQL server");
+            jda = builder.build();
+            jda.awaitReady();
+
+        } catch (SQLException | IOException | URISyntaxException | InterruptedException e) {
+            System.out.println("Error in connecting to PostgreSQL server or in JDA instance");
             e.printStackTrace();
             return;
         }
@@ -68,12 +77,16 @@ public class Reminding {
         //Timer que roda a cada 24h:
         Timer timer = new Timer();
         final long milisegundos = 86400000;
+        long timeUntilSixAm = Time.timeUntilSixAm();
 
         TimerTask task = new TimerTask(){
             @Override
             public void run() {
                 try {
+                    List<Guild> guilds = jda.getGuilds();
                     String data = Today.date();
+
+                    String[][] messages;
 
                     dataDuasSemanas = dateFormat.parse(data);
                     dataDuasSemanas.setTime(dataDuasSemanas.getTime() + 86400000L * 14);
@@ -112,12 +125,37 @@ public class Reminding {
                             System.out.println("Incorrect date format, number: " + i);
                         }
                     }
+                    
+                    for(Guild guild : guilds) {
+                        long serverID = Long.parseLong(guild.getId());
+
+                        messages = Select.selectMessages(serverID);
+                        TextChannel textChannel = guild.getTextChannelById(Long.parseLong(messages[0][4]));
+
+                        int messagesLength = messages.length;
+                        String role = null;
+                        for (int i = 0; i < messagesLength; i++) {
+                            if (!messages[i][3].contains("everyone")) {
+                                role = "<@&" + messages[i][3] + ">";
+                                break;
+                            }
+                        }
+                        EmbedBuilder info = new EmbedBuilder();
+                        info = EmbedMessage.upcomingEmbed(info, messages, messagesLength);
+
+                        sendMessage(textChannel, info, role);
+                    }
                 } catch (ParseException | SQLException | IOException | URISyntaxException e) {
                     e.printStackTrace();
                 }
             }
         };
-        timer.scheduleAtFixedRate(task, 1000, milisegundos);
+        timer.scheduleAtFixedRate(task, timeUntilSixAm, milisegundos);
+    }
+
+    static void sendMessage(TextChannel ch, EmbedBuilder message, String role) {
+        ch.sendMessage(role+", Clique em 📆 para atualizar.").queue();
+        ch.sendMessageEmbeds(message.build()).queue();
     }
 
 }

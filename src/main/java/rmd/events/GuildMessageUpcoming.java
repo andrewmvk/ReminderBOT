@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import rmd.date.Time;
+import rmd.embed.EmbedMessage;
 import rmd.errors.Exceptions;
 import rmd.reminding.Reminding;
 import rmd.sequelize.Select;
@@ -67,14 +68,6 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                     try {
                         messages = Select.selectMessages(serverID);
                         messagesLength = messages.length;
-                    } catch (NullPointerException e) {
-                        argumento = "NullPointerException";
-                        info.addField("ERROR:", "Não existe nenhum evento cadastrado neste servidor!", false);
-                        info.setColor(0xff0000);
-                    } catch (IOException | URISyntaxException e) {
-                        e.printStackTrace();
-                    }
-                    if (!argumento.contains("NullPointerException")) {
                         try {
                             for (int i = 0; i < messagesLength; i++) {
                                 if (!messages[i][3].contains("everyone")) {
@@ -87,27 +80,14 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                             role = "";
                         }
 
-                        for (int i = 0; i < messagesLength; i++) {
-                            int numero = i + 1;
-                            info.setTitle("📚 RemindingBot: Evento por vir ⏰\n"
-                                    + "-------------------------------------------");
-                            if (messages[i][1]!=null) {
-                                messages[i][1] = rmd.date.Time.timeLeft(messages[i][1]);
-                            }
-
-                            for (int j=0; j<2; j++) {
-                                if(messages[i][j]==null) {
-                                    messages[i][j]="Não informado!";
-                                }
-                            }
-                            info.addField("Evento " + numero + ": " + messages[i][0],
-                                    "Tempo restante :\n" + messages[i][1] +
-                                            "\nID: " + messages[i][2], false);
-                        }
-
-                        info.setFooter("Criado por : Andrew Medeiros & Brayan Amaral");
                         noError = true;
-                    }
+                        info = EmbedMessage.upcomingEmbed(info, messages, messagesLength);
+                    } catch (NullPointerException e) {
+                            info.addField("ERROR:", "Não existe nenhum evento cadastrado neste servidor!", false);
+                            info.setColor(0xff0000);
+                        } catch (IOException | URISyntaxException e) {
+                            e.printStackTrace();
+                        }
                 } else {
                     //With a secondary arg (messageID)
                     String[] message = Select.select(Long.parseLong(args[2]) ,serverID);

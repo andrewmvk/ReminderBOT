@@ -58,11 +58,11 @@ public class GuildMessageModifyDateRequest extends ListenerAdapter {
                     isValuesCorrect = false;
                 }
 
-                //Verificação da hora:
-                String[] hourVerification = args[5].split(":");
-                int hour = Integer.parseInt(hourVerification[0]);
-                int minute = Integer.parseInt(hourVerification[1]);
-                int seconds = Integer.parseInt(hourVerification[2]);
+                //Hour verification
+                String[] hourSplitter = args[5].split(":");
+                int hour = Integer.parseInt(hourSplitter[0]);
+                int minute = Integer.parseInt(hourSplitter[1]);
+                int seconds = Integer.parseInt(hourSplitter[2]);
 
                 if ((hour>23 || hour<0) || (minute>59 || minute<0) || (seconds>59 || seconds<0)) {
                     isValuesCorrect = false;

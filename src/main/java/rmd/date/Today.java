@@ -22,7 +22,7 @@ public class Today {
         int year = hoje.get(Calendar.YEAR);
         int month = hoje.get(Calendar.MONTH) + 1;
         int day = hoje.get(Calendar.DAY_OF_MONTH) + 1;
-        int hour = 6;
+        int hour = 6+3;
         int minute = 0;
         int second = 0;
 

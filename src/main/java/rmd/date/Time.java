@@ -12,16 +12,16 @@ public class Time {
         Calendar cal = Calendar.getInstance();
         Date eventDate = dateFormat.parse(date);
         Date today = dateFormat.parse(Today.date());
-        String finalTemp = "";
+        String finalTemp;
 
-        long diffEmMili = Math.abs(today.getTime()-eventDate.getTime());
+        long diffEmMili = eventDate.getTime()-today.getTime();
 
-        if(today.getTime() > eventDate.getTime() + 86400000) {
+        if(diffEmMili + 86400000 <= 0) {
             finalTemp = "Tempo excedido!";
-        } else if (today.getTime() > eventDate.getTime()) {
+        } else if (diffEmMili <= 0) {
             finalTemp = "Evento já aconteceu!";
         } else {
-            Date tempo = new Date(diffEmMili + 10800000);
+            Date tempo = new Date(diffEmMili + 10800000);//+3 hours
             cal.setTime(tempo);
             int meses = cal.get(Calendar.MONTH);
             int dias = cal.get(Calendar.DAY_OF_MONTH) - 1;
@@ -44,7 +44,7 @@ public class Time {
 
         long diffEmMilli = Math.abs(today.getTime()-eventDate.getTime());
 
-        Long days = TimeUnit.DAYS.convert(diffEmMilli, TimeUnit.MILLISECONDS);
+        long days = TimeUnit.DAYS.convert(diffEmMilli, TimeUnit.MILLISECONDS);
 
         long[] remaining = new long[2];
         remaining[0] = days;

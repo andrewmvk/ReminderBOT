@@ -82,6 +82,7 @@ public class Reminding {
         TimerTask task = new TimerTask(){
             @Override
             public void run() {
+                System.out.println("Time until 06AM: " + timeUntilSixAm );
                 try {
                     List<Guild> guilds = jda.getGuilds();
                     String data = Today.date();
@@ -125,7 +126,7 @@ public class Reminding {
                             System.out.println("Incorrect date format, number: " + i);
                         }
                     }
-                    
+
                     for(Guild guild : guilds) {
                         long serverID = Long.parseLong(guild.getId());
 

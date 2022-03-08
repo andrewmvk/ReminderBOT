@@ -15,13 +15,21 @@ public class Time {
         String finalTemp;
 
         long diffEmMili = eventDate.getTime()-today.getTime();
+        if(System.getenv("TOKEN")!=null) {
+            diffEmMili += 10800000;
+        }
 
         if(diffEmMili + 86400000 <= 0) {
             finalTemp = "Tempo excedido!";
         } else if (diffEmMili <= 0) {
             finalTemp = "Evento já aconteceu!";
         } else {
-            Date tempo = new Date(diffEmMili + 10800000);//+3 hours
+            Date tempo;
+            if(System.getenv("TOKEN")!=null) {
+                tempo = new Date(diffEmMili);
+            } else {
+                tempo = new Date(diffEmMili + 10800000);//+3 hours
+            }
             cal.setTime(tempo);
             int meses = cal.get(Calendar.MONTH);
             int dias = cal.get(Calendar.DAY_OF_MONTH) - 1;

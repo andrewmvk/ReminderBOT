@@ -22,7 +22,7 @@ public class Time {
 
         long diffEmMili = eventDate.getTime()-today.getTime();
         if (diffEmMili<=0 && duration!=0) {
-            timeRemaining = diffEmMili+((long) duration *1000*60*60);
+            timeRemaining = diffEmMili+((long) duration *1000*60);
         }
 
         if(System.getenv("TOKEN")!=null) {

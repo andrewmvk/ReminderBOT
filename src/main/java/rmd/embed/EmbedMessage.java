@@ -69,12 +69,12 @@ public class EmbedMessage {
         }
         if (date == null) {
             info.addField("Data :", "{Data do evento}", false);
-            if(duration.contains("0")) {
+            if(duration==null || duration.equals("0")) {
                 info.addField("Tempo restante :", "{Tempo restante}", false);
             }
         } else {
             info.addField("Data :", date, false);
-            if(duration.contains("0")) {
+            if(duration==null || duration.equals("0")) {
                 String timeLeft = Time.timeLeft(date, 0)[0];
                 if(!timeLeft.contains("-")) {
                     info.addField("Tempo até o evento :", timeLeft, false);
@@ -83,7 +83,7 @@ public class EmbedMessage {
                 }
             }
         }
-        if (!duration.contains("0")) {
+        if (duration!=null && !duration.equals("0")) {
             String remaining = Time.timeLeft(date, Integer.parseInt(duration))[1];
             String timeLeft = Time.timeLeft(date, Integer.parseInt(duration))[0];
             if(remaining!=null) {
@@ -91,7 +91,7 @@ public class EmbedMessage {
             } else {
                 info.addField("Tempo até o evento :", timeLeft, false);
             }
-            info.addField("Duração :",duration + " horas", false);
+            info.addField("Duração :",duration + " minutos", false);
         }
         if (description == null) {
             info.addField("Descrição : ", "{Descrição}", false);

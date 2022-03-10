@@ -25,7 +25,7 @@ public class GuildMessageCommandsRequest extends ListenerAdapter {
             info.addField("Modificar data :", "Modifica a data do evento cujo ID é igual ao demonstrado seguindo a formatação de data descrita abaixo.\n" +
                     "!!rmd modify date [ID] [dd/MM/yyyy HH:mm:ss]", false);
             info.addField("Modificar duração :", "Modifica a duração do evento, dessa forma a data passa a ser o começo do evento.\n" +
-                    "!!rmd modify duration [ID] [horas]", false);
+                    "!!rmd modify duration [ID] [minutos]", false);
             info.addField("Modificar descrição :", "Modifica a descrição do evento com identificador igual ao [ID]. Sem restrições aqui.\n" +
                     "!!rmd modify description [ID] [texto]", false);
             info.addField("Listar eventos :", "Lista os últimos 25 eventos criados no servidor em ordem de ocorrência.\n" +

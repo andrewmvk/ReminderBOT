@@ -45,6 +45,7 @@ public class GuildMessageModifyDescriptionRequest extends ListenerAdapter {
                 } else if (informedText){
                     Update.updateDescription(modificationID, description.toString(), serverID, channelID);
 
+                    message[2] = description.toString();
                     String lastChangeName = event.getMember().getEffectiveName();
                     String lastChangeAvatarURL = event.getMember().getUser().getAvatarUrl();
                     info = EmbedMessage.modifiedEmbed(info, message, modificationID, lastChangeName, lastChangeAvatarURL);
@@ -57,7 +58,7 @@ public class GuildMessageModifyDescriptionRequest extends ListenerAdapter {
                 } else if (e.toString().contains("NullPointerException")) {
                     info = Exceptions.idNotFound(args[3]);
                 } else {
-                    info = Exceptions.sqlConnection();
+                    info = Exceptions.incorrectModifyCommand("description");
                 }
             }
         event.getChannel().sendMessageEmbeds(info.build()).queue();

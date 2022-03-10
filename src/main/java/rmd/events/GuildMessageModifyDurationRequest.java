@@ -45,7 +45,7 @@ public class GuildMessageModifyDurationRequest extends ListenerAdapter {
                 if(argumento == null) {
                     info = Exceptions.idNotInformed("modify duration");
                 } else if (duration == -1 && !e.toString().contains("NumberFormatException")) {
-                    info.addField("ERROR :","Digite a duração do evento em horas!", false);
+                    info.addField("ERROR :","Digite a duração do evento em minutos!", false);
                     info.setColor(0xff0000);
                 } else {
                     info = Exceptions.idNotFound(argumento);

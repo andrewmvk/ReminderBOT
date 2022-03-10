@@ -83,24 +83,22 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                         noError = true;
                         info = EmbedMessage.upcomingEmbed(info, messages, messagesLength);
                     } catch (NullPointerException e) {
-                            info.addField("ERROR:", "Não existe nenhum evento cadastrado neste servidor!", false);
-                            info.setColor(0xff0000);
-                        } catch (IOException | URISyntaxException e) {
-                            e.printStackTrace();
-                        }
+                        e.printStackTrace();
+                        info.addField("ERROR:", "Não existe nenhum evento cadastrado neste servidor!", false);
+                        info.setColor(0xff0000);
+                    } catch (IOException | URISyntaxException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     //With a secondary arg (messageID)
-                    String[] message = Select.select(Long.parseLong(args[2]) ,serverID);
+                    long messageId = Long.parseLong(args[2]);
+                    String[] message = Select.select(messageId ,serverID);
                     if(message[3]==null) {
                         info.addField("ERROR :", "Não existe nenhum evento com esse ID("+args[2]+") neste servidor!", false);
                         info.setColor(0xff0000);
                     } else {
                         try {
-                            String daysLeft = "Data final não informada!";
                             String title, date, description;
-                            if (message[1]!=null) {
-                                daysLeft = Time.timeLeft(message[1]);
-                            }
                             for (int j=0; j<4; j++) {
                                 if(message[j]==null) {
                                     message[j]="Não informado!";
@@ -110,18 +108,13 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                             date = message[1];
                             description = message[2];
 
-                            info.setTitle("📚  RemindingBot: Evento por vir  ⏰\n"
-                                    + "-------------------------------------------");
-                            info.addField("Evento :", title, false);
-                            info.addField("Data final :", date, false);
-                            info.addField("Descrição :", description, false);
-                            info.addField("Tempo restante :", daysLeft, false);
-                            info.addField("ID : " + args[2],"", false);
+                            String lastChangeName = event.getMember().getEffectiveName();
+                            String lastChangeAvatarURL = event.getMember().getUser().getAvatarUrl();
+                            info = EmbedMessage.modifiedEmbed(info, message, messageId, lastChangeName, lastChangeAvatarURL);
                             if (title.contains("Não informado!") && date.contains("Não informado!") && description.contains("Não informado!")) {
                                 info.addField("Aviso :", "Este evento pode ser deletado em menos \nde um dia por falta de informações!", false);
                             }
                             info.setFooter("Criado por : " + message[3]);
-                            info.setColor(0x2d3b7a);
 
                         } catch (NullPointerException | ParseException e) {
                             if (e.toString().contains("NullPointerException")) {
@@ -150,6 +143,7 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                 } else if(e.toString().contains("SQLException")) {
                     info = Exceptions.sqlConnection();
                 }
+                e.printStackTrace();
                 event.getChannel().sendMessageEmbeds(info.build()).queue();
                 info.clear();
             }

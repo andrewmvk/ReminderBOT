@@ -19,4 +19,5 @@ C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\j
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\sequelize\Start.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageDeleteRequest.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageDefineRoleRequest.java
+C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageModifyDurationRequest.java
 C:\Users\TheRevolution\Documents\Programing\JavaWS\discord-bot-backup\src\main\java\rmd\events\GuildMessageOutOfCommands.java

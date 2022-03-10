@@ -15,6 +15,7 @@ rmd\events\GuildMessageDefineRoleRequest.class
 rmd\sequelize\Delete.class
 rmd\embed\EmbedMessage.class
 rmd\sequelize\Update.class
+rmd\events\GuildMessageModifyDurationRequest.class
 rmd\events\GuildMessageBotSend.class
 rmd\events\GuildMessageCommandsRequest.class
 rmd\events\GuildMessageModifyNameRequest.class

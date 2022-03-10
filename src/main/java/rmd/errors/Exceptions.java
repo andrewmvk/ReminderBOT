@@ -27,10 +27,10 @@ public class Exceptions {
 
         return errorInfo;
     }
-    public static EmbedBuilder idNotInformed() {
+    public static EmbedBuilder idNotInformed(String type) {
         EmbedBuilder errorInfo = new EmbedBuilder();
         errorInfo.addField("ERROR :","Digite o ID de evento!", false);
-        errorInfo.addField("Formato correto :", "!!rmd delete [ID]", false);
+        errorInfo.addField("Formato correto :", "!!rmd "+type+" [ID]", false);
         errorInfo.setColor(0xff0000);
 
         return errorInfo;

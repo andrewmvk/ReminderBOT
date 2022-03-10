@@ -4,6 +4,7 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import rmd.date.Format;
+import rmd.embed.EmbedMessage;
 import rmd.errors.Exceptions;
 import rmd.reminding.Reminding;
 import rmd.sequelize.Select;
@@ -76,33 +77,18 @@ public class GuildMessageModifyDateRequest extends ListenerAdapter {
                     if (message == null) {
                         info = Exceptions.idNotFound(messageID.toString());
                     } else {
-                        String title = message[0];
                         Update.updateDate(modificationID, finalDate, serverID, channelID);
 
-                        String daysLeft = rmd.date.Time.timeLeft(finalDate);
-                        info.setTitle("📚  RemindingBot: Evento  ⏰\n"
-                                + "-----------------------------------");
-                        if (message[0] == null) {
-                            info.addField("Nome :", "{Nome do evento}", false);
-                        } else {
-                            info.addField("Nome :", title, false);
-                        }
-                        info.addField("Data final :", finalDate, false);
-                        info.addField("Tempo restante :", daysLeft, false);
-                        if (message[2] == null) {
-                            info.addField("Descrição :", "{Descrição}", false);
-                        } else {
-                            info.addField("Descrição :", message[2], false);
-                        }
-                        info.addField("ID : " +  modificationID,"", false);
-                        info.setColor(0x2d3b7a);
-                        info.setFooter("Última alteração feita por: " + event.getMember().getEffectiveName(), event.getMember().getUser().getAvatarUrl());
+                        String lastChangeName = event.getMember().getEffectiveName();
+                        String lastChangeAvatarURL = event.getMember().getUser().getAvatarUrl();
+                        message[1] = finalDate;
+                        info = EmbedMessage.modifiedEmbed(info, message, modificationID, lastChangeName, lastChangeAvatarURL);
                     }
 
                 } else {
                     info = Exceptions.incorrectModifyCommand("date");
                 }
-            } catch (SQLException | ParseException | ArrayIndexOutOfBoundsException | NumberFormatException | IOException | URISyntaxException e) {
+            } catch (SQLException | ArrayIndexOutOfBoundsException | NumberFormatException | IOException | URISyntaxException | ParseException e) {
                 String error = Arrays.toString(e.getStackTrace());
                 if(error.contains("sql")) {
                     info = Exceptions.sqlConnection();

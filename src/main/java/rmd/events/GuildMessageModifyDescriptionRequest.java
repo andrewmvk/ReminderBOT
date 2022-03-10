@@ -3,6 +3,7 @@ package rmd.events;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import rmd.embed.EmbedMessage;
 import rmd.errors.Exceptions;
 import rmd.reminding.Reminding;
 import rmd.sequelize.Select;
@@ -42,33 +43,15 @@ public class GuildMessageModifyDescriptionRequest extends ListenerAdapter {
                 if (message == null) {
                     info = Exceptions.idNotFound(messageID.toString());
                 } else if (informedText){
-                    String title = message[0];
-                    String date = message[1];
                     Update.updateDescription(modificationID, description.toString(), serverID, channelID);
 
-                    info.setTitle("📚  RemindingBot: Evento  ⏰\n"
-                            + "------------------------------------");
-                    if (message[0] == null) {
-                        info.addField("Nome:", "{Nome do evento}", false);
-                    } else {
-                        info.addField("Nome :", title, false);
-                    }
-                    if (message[1] == null) {
-                        info.addField("Data final :", "{Data do evento - Horário do evento}", false);
-                        info.addField("Tempo restante :", "{Tempo restante}", false);
-                    } else {
-                        info.addField("Data final :", date, false);
-                        String daysLeft = rmd.date.Time.timeLeft(message[1]);
-                        info.addField("Tempo restante :", daysLeft, false);
-                    }
-                    info.addField("Descrição :", description.toString(), false);
-                    info.addField("ID : " + modificationID, "", false);
-                    info.setColor(0x2d3b7a);
-                    info.setFooter("Última alteração feita por : " + event.getMember().getEffectiveName(), event.getMember().getUser().getAvatarUrl());
+                    String lastChangeName = event.getMember().getEffectiveName();
+                    String lastChangeAvatarURL = event.getMember().getUser().getAvatarUrl();
+                    info = EmbedMessage.modifiedEmbed(info, message, modificationID, lastChangeName, lastChangeAvatarURL);
                 } else {
                     info = Exceptions.incorrectModifyCommand("description");
                 }
-            } catch (SQLException | ParseException | NumberFormatException | IOException | URISyntaxException | ArrayIndexOutOfBoundsException | NullPointerException e) {
+            } catch (SQLException | NumberFormatException | IOException | URISyntaxException | ArrayIndexOutOfBoundsException | NullPointerException | ParseException e) {
                 if (e.toString().contains("ArrayIndexOutOfBoundsException")) {
                     info = Exceptions.incorrectModifyCommand("description");
                 } else if (e.toString().contains("NullPointerException")) {

@@ -3,6 +3,7 @@ package rmd.events;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import rmd.embed.EmbedMessage;
 import rmd.errors.Exceptions;
 import rmd.reminding.Reminding;
 import rmd.sequelize.Select;
@@ -50,29 +51,15 @@ public class GuildMessageModifyNameRequest extends ListenerAdapter {
                 } else if(informedText) {
                     Update.updateTitle(modificationID, title.toString(), serverID, channelID);
 
-                    info.setTitle("📚  RemindingBot: Evento  ⏰\n"
-                            + "-----------------------------------");
-                    info.addField("Nome :", title.toString(), false);
-                    if (message[1] == null) {
-                        info.addField("Data final :", "{Data do evento - Horário do evento}", false);
-                        info.addField("Tempo restante :", "{Tempo restante]", false);
-                    } else {
-                        info.addField("Data final :", message[1], false);
-                        String daysLeft = rmd.date.Time.timeLeft(message[1]);
-                        info.addField("Tempo restante : ", daysLeft, false);
-                    }
-                    if (message[2] == null) {
-                        info.addField("Descrição : ", "{Descrição}", false);
-                    } else {
-                        info.addField("Descrição : ", message[2], false);
-                    }
-                    info.addField("ID : " + modificationID, "", false);
-                    info.setColor(0x2d3b7a);
-                    info.setFooter("Última alteração feita por : " + event.getMember().getEffectiveName(), event.getMember().getUser().getAvatarUrl());
+                    String lastChangeName = event.getMember().getEffectiveName();
+                    String lastChangeAvatarURL = event.getMember().getUser().getAvatarUrl();
+
+                    message[0] = title.toString();
+                    info = EmbedMessage.modifiedEmbed(info, message, modificationID, lastChangeName, lastChangeAvatarURL);
                 } else {
                     info = Exceptions.incorrectModifyCommand("name");
                 }
-            } catch (SQLException | NumberFormatException | ParseException | ArrayIndexOutOfBoundsException | IOException | URISyntaxException e) {
+            } catch (SQLException | NumberFormatException | ArrayIndexOutOfBoundsException | IOException | URISyntaxException | ParseException e) {
                 if (e.toString().contains("ArrayIndexOutOfBoundsException")) {
                     info = Exceptions.incorrectModifyCommand("name");
                 } else if(e.toString().contains("NullPointerException")) {

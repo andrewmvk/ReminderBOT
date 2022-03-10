@@ -10,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.Arrays;
 
 public class Select {
     public static String[] select(Long messagesID, Long serverID) throws SQLException, IOException, URISyntaxException {
@@ -21,11 +22,12 @@ public class Select {
             connection.close();
             return null;
         } else {
-            String[] message = new String[4];
+            String[] message = new String[5];
             message[0] = result.getString("title");
             message[1] = result.getString("date");
             message[2] = result.getString("description");
             message[3] = result.getString("author");
+            message[4] = String.valueOf(result.getInt("duration"));
             connection.close();
             result.close();
             return message;
@@ -46,7 +48,7 @@ public class Select {
             count.close();
             ResultSet result = statementSelect.executeQuery(Reminding.selectMessages + serverID);
             int j = 0;
-            String[][] messages = new String[i][5];
+            String[][] messages = new String[i][6];
             String temp;
             long m = 804000;
             long[] daysLeft = new long[i];
@@ -58,6 +60,7 @@ public class Select {
                 messages[j][2] = String.valueOf(result.getLong("messages_id"));
                 messages[j][3] = result.getString("role");
                 messages[j][4] = String.valueOf(result.getLong("channel_id"));
+                messages[j][5] = String.valueOf(result.getInt("duration"));
                 if (messages[j][1] != null) {
                     remaining = Time.daysLeft(messages[j][1]);
                     timeRemaining[j] = remaining[1];
@@ -73,7 +76,7 @@ public class Select {
             for (int q = 0; q < daysLeftLength; q++) {
                 for (int w = q + 1; w < daysLeftLength; w++) {
                     if (timeRemaining[q] > timeRemaining[w]) {
-                        for (int l = 0; l < 4; l++) {
+                        for (int l = 0; l < 6; l++) {
                             temp = messages[q][l];
                             messages[q][l] = messages[w][l];
                             messages[w][l] = temp;
@@ -84,6 +87,7 @@ public class Select {
                     }
                 }
             }
+
             connection.close();
             result.close();
             return messages;

@@ -53,4 +53,16 @@ public class Update {
         connection.close();
         statement.close();
     }
+    public static void updateDuration (int duration, Long serverID, long messageId) throws SQLException, IOException, URISyntaxException {
+        Connection connection = Start.connecting();
+        PreparedStatement statement = Start.connecting().prepareStatement(
+                "UPDATE serversmessages SET duration='"+ duration
+                        +"' "+"WHERE messages_id=" + messageId
+                        +"AND server_id="+serverID
+        );
+
+        statement.execute();
+        connection.close();
+        statement.close();
+    }
 }

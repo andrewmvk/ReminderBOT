@@ -29,7 +29,7 @@ public class Reminding {
     public static String prefix = "!!";
     public static String delete = "DELETE FROM serversmessages WHERE messages_id=";
     public static String selectMessage = "SELECT * FROM serversmessages WHERE messages_id=";
-    public static String selectMessages = "SELECT messages_id,title,date,role,channel_id FROM serversmessages WHERE server_id=";
+    public static String selectMessages = "SELECT messages_id,title,date,role,channel_id,duration FROM serversmessages WHERE server_id=";
     public static String select = "SELECT * FROM serversmessages";
     public static String selectId = "SELECT MAX(messages_id) FROM serversmessages";
     public static String sql = "INSERT INTO serversmessages (server_id, channel_id, title, description, date, author) VALUES (?, ?, ?, ?, ?, ?)";
@@ -39,6 +39,7 @@ public class Reminding {
     public static void main(String[] args) throws LoginException, ParseException {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Calendar hoje = Calendar.getInstance();
+        //TODO comments
 
         try {
             Start.connecting().close();
@@ -64,6 +65,7 @@ public class Reminding {
             builder.addEventListeners(new GuildMessageDefineRoleRequest());
             builder.addEventListeners(new GuildMessageOutOfCommands());
             builder.addEventListeners(new GuildMessageBotSend());
+            builder.addEventListeners(new GuildMessageModifyDurationRequest());
 
             jda = builder.build();
             jda.awaitReady();
@@ -109,7 +111,7 @@ public class Reminding {
 
                             if (date!=null){
                                 try {
-                                    timeLeft = Time.timeLeft(date);
+                                    timeLeft = Time.timeLeft(date,0)[0];
                                     if (timeLeft.contains("Tempo excedido!")) {
                                         Delete.delete(messageID, serverID, channelID);
                                         System.out.println("Time exceeded event deleted!");

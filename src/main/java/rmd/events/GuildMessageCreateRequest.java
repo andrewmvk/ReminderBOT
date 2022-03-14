@@ -7,6 +7,7 @@ import rmd.embed.EmbedMessage;
 import rmd.errors.Exceptions;
 import rmd.reminding.Reminding;
 import rmd.sequelize.Insert;
+import rmd.sequelize.Select;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
@@ -36,10 +37,11 @@ public class GuildMessageCreateRequest extends ListenerAdapter {
             String lastChangeAvatarURL = event.getMember().getUser().getAvatarUrl();
 
             try {
+                String role = Select.selectRole(serverID);
                 if (title.toString().equalsIgnoreCase("")) {
-                    messageID = Insert.create(serverID, channelID, null, null, null, lastChangeName);
+                    messageID = Insert.create(serverID, channelID, null, null, null, lastChangeName, role);
                 } else {
-                    messageID = Insert.create(serverID, channelID, title.toString(), null, null, lastChangeName);
+                    messageID = Insert.create(serverID, channelID, title.toString(), null, null, lastChangeName, role);
                 }
             } catch (SQLException | IOException | URISyntaxException e) {
                 event.getChannel().sendMessageEmbeds(Exceptions.sqlConnection().build()).queue();

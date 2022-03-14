@@ -32,7 +32,7 @@ public class Reminding {
     public static String selectMessages = "SELECT messages_id,title,date,role,channel_id,duration FROM serversmessages WHERE server_id=";
     public static String select = "SELECT * FROM serversmessages";
     public static String selectId = "SELECT MAX(messages_id) FROM serversmessages";
-    public static String sql = "INSERT INTO serversmessages (server_id, channel_id, title, description, date, author) VALUES (?, ?, ?, ?, ?, ?)";
+    public static String sql = "INSERT INTO serversmessages (server_id, channel_id, title, description, date, author, role) VALUES (?, ?, ?, ?, ?, ?, ?)";
     public static Date dataDuasSemanas, dataUmaSemana, dataUmDia;
     public static JDA jda;
 
@@ -138,15 +138,19 @@ public class Reminding {
                         int messagesLength = messages.length;
                         String role = null;
                         for (int i = 0; i < messagesLength; i++) {
-                            if (!messages[i][3].contains("everyone")) {
-                                role = "<@&" + messages[i][3] + ">";
-                                break;
+                            if (messages[i][3] != null) {
+                                if (!messages[i][3].contains("everyone")) {
+                                    role = "<@&" + messages[i][3] + ">";
+                                    break;
+                                }
                             }
                         }
                         EmbedBuilder info = new EmbedBuilder();
                         info = EmbedMessage.upcomingEmbed(info, messages, messagesLength);
 
-                        sendMessage(textChannel, info, role);
+                        if (role != null) {
+                            sendMessage(textChannel, info, role);
+                        }
                     }
                 } catch (ParseException | SQLException | IOException | URISyntaxException e) {
                     e.printStackTrace();

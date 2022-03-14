@@ -64,20 +64,22 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                 }
                 if(argumento.contains("ArrayIndexOutOfBoundsException")) {
                     //Without a second arg
-                    String[][] messages = null;
+                    String[][] messages;
                     try {
                         messages = Select.selectMessages(serverID);
                         messagesLength = messages.length;
                         try {
                             for (int i = 0; i < messagesLength; i++) {
-                                if (!messages[i][3].contains("everyone")) {
-                                    role = "<@&" + messages[i][3] + ">";
-                                    break;
+                                if (messages[i][3]!=null) {
+                                    if (!messages[i][3].contains("everyone")) {
+                                        role = "<@&" + messages[i][3] + ">";
+                                        break;
+                                    }
                                 }
                             }
                         } catch (NullPointerException e) {
                             //Role not defined for a new created event
-                            role = "";
+                            role = null;
                         }
 
                         noError = true;
@@ -125,10 +127,8 @@ public class GuildMessageUpcoming extends ListenerAdapter {
                         }
                     }
                 }
-                if(noError && role!=null && !role.equals("")) {
-                    if(!isBot) {
-                        event.getChannel().sendMessage(role + ", Clique em 📆 para atualizar.").queue();
-                    }
+                if(noError && role!=null && !isBot) {
+                   event.getChannel().sendMessage(role + ", Clique em 📆 para atualizar.").queue();
                 }
                 if (messageFinalID!=null) {
                     //The message is edited if the messageFinalID isn't NULL

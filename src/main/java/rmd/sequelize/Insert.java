@@ -11,7 +11,7 @@ import java.sql.*;
 public class Insert {
     public static Long create(@Nonnull Long serverID,@Nonnull Long channelID,
                               @Nullable String title,@Nullable String description,@Nullable String date,
-                              @Nonnull String author) throws SQLException, IOException, URISyntaxException {
+                              @Nonnull String author, @Nonnull String role) throws SQLException, IOException, URISyntaxException {
         Connection connection = Start.connecting();
         PreparedStatement statement = connection.prepareStatement(Reminding.sql);
         Statement statementSelect = connection.createStatement();
@@ -24,6 +24,7 @@ public class Insert {
         statement.setString(4, description);
         statement.setString(5, date);
         statement.setString(6, author);
+        statement.setString(7, role);
 
         rows = statement.executeUpdate();
         if (rows>0) {

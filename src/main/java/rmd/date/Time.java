@@ -21,12 +21,12 @@ public class Time {
         long timeRemaining = -1;
 
         long diffEmMili = eventDate.getTime()-today.getTime();
-        if (diffEmMili<=0 && duration!=0) {
-            timeRemaining = diffEmMili+((long) duration *1000*60);
-        }
-
+        
         if(System.getenv("TOKEN")!=null) {
             diffEmMili += 10800000;
+        }
+        if (diffEmMili <= 0 && duration != 0) {
+            timeRemaining = diffEmMili+((long) duration *1000*60);
         }
         if(diffEmMili + 3600000 <= 0 && timeRemaining < 0) {
             finalTemp = "Tempo excedido!";

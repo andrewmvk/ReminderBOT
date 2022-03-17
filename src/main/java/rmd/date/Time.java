@@ -21,7 +21,7 @@ public class Time {
         long timeRemaining = -1;
 
         long diffEmMili = eventDate.getTime()-today.getTime();
-        
+
         if(System.getenv("TOKEN")!=null) {
             diffEmMili += 10800000;
         }
